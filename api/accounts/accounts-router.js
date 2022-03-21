@@ -1,27 +1,69 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-router.get('/', (req, res, next) => {
-  // DO YOUR MAGIC
-})
+const md = require("./accounts-middleware");
 
-router.get('/:id', (req, res, next) => {
+router.get("/", (req, res, next) => {
   // DO YOUR MAGIC
-})
-
-router.post('/', (req, res, next) => {
-  // DO YOUR MAGIC
-})
-
-router.put('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+  try {
+    res.json("get accounts");
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.delete('/:id', (req, res, next) => {
+router.get("/:id", md.checkAccountId, (req, res, next) => {
   // DO YOUR MAGIC
-})
+  try {
+    res.json("get accounts by id");
+  } catch (err) {
+    next(err);
+  }
+});
 
-router.use((err, req, res, next) => { // eslint-disable-line
+router.post(
+  "/",
+  md.checkAccountPayload,
+  md.checkAccountNameUnique,
+  (req, res, next) => {
+    // DO YOUR MAGIC
+    try {
+      res.json("post accounts");
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.put(
+  "/:id",
+  md.checkAccountId,
+  md.checkAccountPayload,
+  md.checkAccountNameUnique,
+  (req, res, next) => {
+    // DO YOUR MAGIC
+    try {
+      res.json("get accounts");
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.delete("/:id", md.checkAccountId, (req, res, next) => {
   // DO YOUR MAGIC
-})
+  try {
+    res.json("get accounts");
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.use((err, req, res, next) => {
+  // eslint-disable-line
+  // DO YOUR MAGIC
+  res.status(err.status || 500).json({
+    message: err.message,
+  });
+});
 
 module.exports = router;
